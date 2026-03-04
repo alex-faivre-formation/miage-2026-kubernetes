@@ -69,11 +69,11 @@ Cluster Kubernetes (minikube)
 |  | Job, CronJob     |      | ResourceQuota + LimitRange + HPA       |  |
 |  | DaemonSet        |      +----------------------------------------+  |
 |  | StatefulSet      |                                                  |
-|  | Init + Sidecar   |      Namespace: argocd                          |
+|  | Init + Sidecar   |      Namespace: argocd                           |
 |  +------------------+      +----------------------------------------+  |
-|                            | ArgoCD (GitOps)                         |  |
-|                            | -> Synchronise TPs/02-postgres depuis   |  |
-|                            |    Git vers le namespace postgres       |  |
+|                            | ArgoCD (GitOps)                         | |
+|                            | -> Synchronise TPs/02-postgres depuis   | |
+|                            |    Git vers le namespace postgres       | |
 |                            +----------------------------------------+  |
 |                                                                        |
 |  Namespace: ingress-nginx  Namespace: vault                            |
