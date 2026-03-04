@@ -15,12 +15,12 @@ Le Pod est la plus petite unite deployable dans Kubernetes. Contrairement a Dock
 ```
 +---------------------------+
 |         Pod nginx         |
-|  +---------------------+ |
-|  |  Conteneur nginx    | |
-|  |  - Image: nginx     | |
-|  |  - Port: 80         | |
-|  +---------------------+ |
-|  IP: 10.244.0.5          |
+|  +---------------------+  |
+|  |  Conteneur nginx    |  |
+|  |  - Image: nginx     |  |
+|  |  - Port: 80         |  |
+|  +---------------------+  |
+|  IP: 10.244.0.5           |
 +---------------------------+
 ```
 
