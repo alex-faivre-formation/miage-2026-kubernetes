@@ -71,9 +71,9 @@ Cluster Kubernetes (minikube)
 |  | StatefulSet      |                                                  |
 |  | Init + Sidecar   |      Namespace: argocd                           |
 |  +------------------+      +----------------------------------------+  |
-|                            | ArgoCD (GitOps)                         | |
-|                            | -> Synchronise TPs/02-postgres depuis   | |
-|                            |    Git vers le namespace postgres       | |
+|                            | ArgoCD (GitOps)                        |  |
+|                            | -> Synchronise TPs/02-postgres depuis  |  |
+|                            |    Git vers le namespace postgres      |  |
 |                            +----------------------------------------+  |
 |                                                                        |
 |  Namespace: ingress-nginx  Namespace: vault                            |
