@@ -1,0 +1,19 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: migration-db
+  namespace: postgres
+spec:
+  completions: 1
+  parallelism: 1
+  backoffLimit: 3
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: migration
+          image: flyway/flyway:latest
+          args: ["migrate"]
+          envFrom:
+            - secretRef:
+                name: db-credentials

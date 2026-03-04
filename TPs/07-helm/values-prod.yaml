@@ -1,0 +1,12 @@
+env:
+  POSTGRES_DB: proddb
+  POSTGRES_USER: produser
+  POSTGRES_PASSWORD: supersecret
+
+resources:
+  limits:
+    cpu: "2"
+    memory: 2Gi
+  requests:
+    cpu: 500m
+    memory: 512Mi

@@ -1,0 +1,6 @@
+apiVersion: v2
+name: postgresdb
+description: Chart Helm pour le déploiement PostgreSQL du TP MIAGE
+type: application
+version: 0.1.0
+appVersion: "16.0"

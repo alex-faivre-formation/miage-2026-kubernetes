@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: nginx
+  name: credentials
+  labels:
+    app: postgresdb
+data:
+  POSTGRES_DB: "myDatabase"
+  POSTGRES_USER: "myUser"
+  POSTGRES_PASSWORD: "myPassword"
