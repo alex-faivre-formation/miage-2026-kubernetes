@@ -14,7 +14,7 @@ Support de travaux pratiques Kubernetes pour la formation MIAGE 2026.
 
 ## Presentation
 
-Ce depot contient **10 travaux pratiques** progressifs couvrant l'ecosysteme Kubernetes, du deploiement d'un simple conteneur Nginx jusqu'a la gestion des secrets avec HashiCorp Vault. Chaque TP est autonome et dispose de son propre README detaille avec theorie, schemas d'architecture, commandes pas a pas, troubleshooting et QCM de revision.
+Ce depot contient **13 travaux pratiques** progressifs couvrant l'ecosysteme Kubernetes, du deploiement d'un simple conteneur Nginx jusqu'a l'integration complete de HashiCorp Vault avec External Secrets Operator pour la gestion securisee des secrets. Chaque TP est autonome et dispose de son propre README detaille avec theorie, schemas d'architecture, commandes pas a pas, troubleshooting et QCM de revision.
 
 **Derniere mise a jour** : 4 mars 2026
 
@@ -25,7 +25,7 @@ Ce depot contient **10 travaux pratiques** progressifs couvrant l'ecosysteme Kub
 - Un cluster Kubernetes fonctionnel (minikube recommande)
 - `kubectl` installe et configure
 - `helm` installe (TPs 07, 09, 10)
-- `jq` installe (TP 10)
+- `jq` installe (TPs 10, 11, 12, 13)
 
 ```bash
 # Demarrer minikube
@@ -50,6 +50,9 @@ kubectl get nodes
 | 08 | [ArgoCD - GitOps](TPs/08-argocd/) | `argocd` | GitOps, Application CRD, sync automatique, self-heal, drift detection | [README](TPs/08-argocd/README.md) |
 | 09 | [Ingress et Harbor](TPs/09-ingress/) | `ingress-nginx` | Ingress Controller NGINX, routage HTTP/HTTPS, Harbor registry | [README](TPs/09-ingress/README.md) |
 | 10 | [Vault - Gestion des secrets](TPs/10-vault/) | `vault` | HashiCorp Vault, HA/Raft, Shamir's Secret Sharing, Unseal | [README](TPs/10-vault/README.md) |
+| 11 | [Vault via ArgoCD](TPs/11-vault-argocd/) | `vault` | Vault GitOps, ArgoCD Helm chart, Init/Unseal, Raft cluster | [README](TPs/11-vault-argocd/README.md) |
+| 12 | [External Secrets Operator](TPs/12-external-secrets/) | `external-secrets` | ESO, ClusterSecretStore, KV v2, sync Vault → K8s | [README](TPs/12-external-secrets/README.md) |
+| 13 | [Integration Vault/ESO/PostgreSQL](TPs/13-integration/) | `integration` | ExternalSecret, rotation de secrets, separation sensible/non-sensible | [README](TPs/13-integration/README.md) |
 
 ## Architecture globale
 
@@ -79,8 +82,15 @@ Cluster Kubernetes (minikube)
 |  Namespace: ingress-nginx  Namespace: vault                            |
 |  +------------------+      +----------------------------------------+  |
 |  | Ingress NGINX    |      | Vault HA (3 replicas, Raft)            |  |
-|  | Harbor (optionnel)|     | Shamir's Secret Sharing                |  |
+|  | Harbor (optionnel)|     | Deploye via ArgoCD (TP11)              |  |
 |  +------------------+      +----------------------------------------+  |
+|                                                                        |
+|  Namespace: external-secrets  Namespace: integration                   |
+|  +------------------+         +-------------------------------------+  |
+|  | ESO Controller   |         | PostgreSQL (secrets via Vault/ESO)  |  |
+|  | ClusterSecretStore|        | ExternalSecret -> Secret K8s        |  |
+|  | vault-backend    |         | ConfigMap (POSTGRES_DB uniquement)  |  |
+|  +------------------+         +-------------------------------------+  |
 +------------------------------------------------------------------------+
 ```
 
@@ -100,6 +110,9 @@ Tous les TPs ont ete testes et valides sur **minikube** le 4 mars 2026.
 | 08 - ArgoCD | Deploye et teste | Application Synced + Healthy, self-heal actif, drift detection OK |
 | 09 - Ingress | Valide (dry-run) | Ingress Controller NGINX installe, manifests valides |
 | 10 - Vault | Valide (template) | Helm template OK, configuration HA/Raft validee |
+| 11 - Vault ArgoCD | Pret | Application ArgoCD pour Vault, setup.sh d'init/unseal |
+| 12 - External Secrets | Pret | ESO via ArgoCD, ClusterSecretStore configure |
+| 13 - Integration | Pret | Stack PostgreSQL complete avec secrets Vault/ESO |
 
 ## Corrections et errata
 
@@ -183,10 +196,29 @@ miage-2026-kubernetes/
     │   ├── README.md
     │   ├── ingress-example.yaml
     │   └── setup-ingress-nginx.sh
-    └── 10-vault/                      # HashiCorp Vault HA
+    ├── 10-vault/                      # HashiCorp Vault HA
+    │   ├── README.md
+    │   ├── helm-vault-raft-values.yml
+    │   ├── helm-vault-ha-values.yml
+    │   └── setup.sh
+    ├── 11-vault-argocd/               # Vault deploye via ArgoCD (GitOps)
+    │   ├── README.md
+    │   ├── application.yaml
+    │   └── setup.sh
+    ├── 12-external-secrets/           # External Secrets Operator
+    │   ├── README.md
+    │   ├── application.yaml
+    │   ├── cluster-secret-store.yaml
+    │   └── setup.sh
+    └── 13-integration/                # Integration Vault + ESO + PostgreSQL
         ├── README.md
-        ├── helm-vault-raft-values.yml
-        ├── helm-vault-ha-values.yml
+        ├── namespace.yaml
+        ├── external-secret.yaml
+        ├── configmap.yaml
+        ├── pv.yaml
+        ├── pvc.yaml
+        ├── deployment.yaml
+        ├── service.yaml
         └── setup.sh
 ```
 
@@ -197,3 +229,4 @@ miage-2026-kubernetes/
 - [Helm](https://helm.sh/)
 - [ArgoCD](https://argo-cd.readthedocs.io/)
 - [HashiCorp Vault](https://developer.hashicorp.com/vault)
+- [External Secrets Operator](https://external-secrets.io/)
